@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "sharepicgen": {
+      "hosting": {
+        "angular-editor-fabric-js-app": [
+          "sharepicgen"
+        ]
+      }
+    }
+  }
+}
