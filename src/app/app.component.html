@@ -8,6 +8,9 @@
 			  <div class="col-xl-12 text-right">
 				  <button data-toggle="tooltip" data-placement="bottom" title="Export to image" type="button" class="btn btn-primary" (click)="rasterize();">
 					  <i class="fa fa-download" aria-hidden="true"></i> Bild exportieren</button>
+					  <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#helpModal">
+						Help ?
+					  </button>
 				  <button data-toggle="tooltip" data-placement="bottom" title="Clean Canvas" type="button" class="btn ml-2 btn-danger" (click)="confirmClear();">
 					  <i class="fa fa-ban" aria-hidden="true"></i> Löschen</button>
 			  </div>
@@ -23,12 +26,6 @@
 			<div class="card-body">
 			  <div class="custom-item" *ngIf="canvas.selected  && canvas.selected.type == 'group'">Keine Optionen für dieses Item</div>
 			<div class="custom-item" *ngIf="!canvas.selected">Keine ausgewählten Items</div>
-			<div class="custom-item" *ngIf="canvas.selected && canvas.textEditor">
-			<div class="custom-item-title">Text</div>
-			<div class="custom-item-body">
-				<input type="text" class="form-control" [(ngModel)]="canvas.props.editTextString" (change)="setSelectedText()" >
-			</div>
-					</div>
 				<div class="custom-item" *ngIf="canvas.selected && canvas.textEditor || canvas.selected && canvas.figureEditor">
 					<div class="custom-item-title">Farbe</div>
 					<div class="custom-item-body">
@@ -220,3 +217,33 @@
 	</div>
   </div>
 </div>
+
+<div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="helpModalLabel">Hilfe benötigt?</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  <b>Formatübersicht</b>
+		  <ul>
+			  <li>Instagram Post: 1080 x 1080</li>
+			  <li>Instagram Stoy: 1080 x 1920</li>
+		  </ul>
+		  <b>Funktionen</b>
+		  <ul>
+			  <li>Objekt in den Vorder/Hintergrund verschieben: Unter Optionen den entsprechenden Pfeil drücken</li>
+			  <li>Text anpassen: Geht nur bei Text ohne Formattierung. Dann im Menü unter dem Bild den Text anpassen oder Teile des Texts markieren und bearbeiten</li>
+			  <li>Schrift mit Hintergrund: Über- / Unterüberschrift auswählen</li>
+			  <li>Hintergrundbild anpassen: Hintergrundbild hochladen, das kann dann durch draufklicken und ziehen verschoben werden. Zum Ändern der Größe des Bildes den Schieber benutzen</li>
+		  </ul>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+		</div>
+	  </div>
+	</div>
+  </div>

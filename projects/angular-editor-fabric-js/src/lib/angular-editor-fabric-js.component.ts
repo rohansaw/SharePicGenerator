@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { fabric } from 'fabric';
 import { R3TargetBinder } from '@angular/compiler';
-import {FontFaceObserver} from 'fontfaceobserver';
+import FontFaceObserver from 'fontfaceobserver'
 
 @Component({
   selector: 'angular-editor-fabric-js',
@@ -116,28 +116,7 @@ export class FabricjsEditorComponent implements AfterViewInit {
             case 'image':
               break;
           }
-        } else{
-          /*var subitems = selectedObject.forEachObject((obj) => {
-            if(obj.type == 'i-text'){
-              this.selected = obj;
-              obj.hasRotatingPoint = true;
-              obj.transparentCorners = false;
-              obj.cornerColor = 'rgba(255, 87, 34, 0.7)';
-              this.canvas.setActiveObject(obj);
-              this.resetPanels();
-              this.textEditor = true;
-              this.getEditTextString();
-              this.getLineHeight();
-              this.getCharSpacing();
-              this.getBold();
-              this.getFill();
-              this.getTextDecoration();
-              this.getTextAlign();
-              this.getFontFamily();
-            }
-          }); */
-
-        }
+        } 
       },
       'selection:cleared': (e) => {
         this.selected = null;
@@ -177,9 +156,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
       const canvasElement: any = document.getElementById('canvas');
     });
 
-    var fontA = new FontFaceObserver('Titillium Web');
-    fontA.load().then(() => {this.canvas.renderAll()});
-
   }
 
 
@@ -188,8 +164,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
   // Block "Size"
 
   changeSize() {
-    //this.canvas.setWidth(this.size.width);
-    //this.canvas.setHeight(this.size.height);
     var canvasWrapperWidth = document.getElementById('canvasWrapper').offsetWidth;
     var scaleRatio = (canvasWrapperWidth - 20 )/ this.size.width;
     this.canvas.setDimensions({ width: this.size.width * scaleRatio, height: this.size.height * scaleRatio });
@@ -200,11 +174,13 @@ export class FabricjsEditorComponent implements AfterViewInit {
 
   addText() {
     if (this.textString) {
+      var fontA = new FontFaceObserver('Titillium Web');
+      fontA.load().then(() => {
       const text = new fabric.IText(this.textString, {
         left: 10,
         top: 10,
         fontFamily: 'Titillium Web',
-        fontSize: 25,
+        fontSize: 30,
         angle: -7,
         fill: '#000000',
         fontWeight: '',
@@ -212,132 +188,124 @@ export class FabricjsEditorComponent implements AfterViewInit {
       });
 
       this.extend(text, this.randomId());
-      this.canvas.add(text);
+      var fontA = new FontFaceObserver('Titillium Web');
+      fontA.load().then(() => {this.canvas.add(text)});
       this.selectItemAfterAdded(text);
       this.textString = '';
+    });
     }
   }
 
   addTextTitle() {
-    var pos = {x: 50, y: 50, angle: -7, padding: {left: 10, right: 10, top: 10, bottom: 0}};
+    var pos = {x: 50, y: 50, angle: -7, padding: 10};
     if (this.textString) {
-      const text = new fabric.IText(this.textString.toUpperCase(), {
-        top: 50,
-        left: 50,
-        fontFamily: 'Titillium Web',
-        fill: '#fff',
-        fontWeight: 'bold',
-        fontSize: 50,
-      });
-
-      var textHeight, rectPadding, top = 50, shapes = [];
-        textHeight = Math.floor(text.lineHeight * text.fontSize);
-
-        rectPadding =   new fabric.Rect({
-            width: text.width + (pos.padding.left + pos.padding.right), 
-            height: textHeight + (pos.padding.top + pos.padding.bottom),
-            left: -1 *  pos.padding.left, 
-            top: 50 - pos.padding.top,
-            fill: '#000000ff'
+      var fontA = new FontFaceObserver('Titillium Web');
+      fontA.load().then(() => {
+        const text = new fabric.IText(this.textString.toUpperCase(), {
+          top: 50,
+          left: 50,
+          fontFamily: 'Titillium Web',
+          fill: '#fff',
+          fontWeight: 'bold',
+          fontSize: 50,
+          angle: pos.angle
         });
 
-        rectPadding.setGradient('fill', {
-          type: 'linear',
-          x1: -rectPadding.width / 20,
-          y1: 0,
-          x2: rectPadding.width / 1.2,
-          y2: 0,
-          colorStops: {
-              0: '#F21F31',
-              1: '#FF007A'
-          }
+          var textHeight, rectPadding,  shapes = [];
+          textHeight = Math.floor(text.lineHeight * text.fontSize);
+          
+          var rectWidth = text.width + 3 * pos.padding;
+          var offset = rectWidth * Math.tan(7 * Math.PI / 180);
+          var left = text.left- pos.padding;
+          var top = text.top - pos.padding;
+          var height =  textHeight + 2 * pos.padding;
+          var rect = new fabric.Polygon([
+            { x: left, y: top }, 
+            { x: left + rectWidth, y: top - offset}, 
+            { x: left + rectWidth, y: top + height - offset},
+            { x: left, y: top + height}], {
+              fill: 'red',
+            });
+
+          rect.setGradient('fill', {
+            type: 'linear',
+            x1: -rect.width / 20,
+            y1: 0,
+            x2: rect.width / 1.2,
+            y2: 0,
+            colorStops: {
+                0: '#F21F31',
+                1: '#FF007A'
+            }
+          });
+
+          shapes.push(rect);
+          shapes.push(text);
+
+        var group = new fabric.Group(shapes, {lockRotation: true,});
+
+        this.extend(group, this.randomId());
+        this.canvas.add(group);
+        //this.selectItemAfterAdded(group);
+        this.textString = '';
         });
-
-        shapes.push(rectPadding);
-        shapes.push(text);
-
-        var gap = 0; 
-        top = top - 1 + textHeight + pos.padding.top + pos.padding.bottom;
-
-      var group = new fabric.Group(shapes, {
-        left: pos.x - (pos.padding.left),
-        top: pos.y - (pos.padding.top),
-        angle: pos.angle,
-      });
-
-      this.extend(group, this.randomId());
-      this.canvas.add(group);
-      //this.selectItemAfterAdded(group);
-      this.textString = '';
+      }
     }
-  }
 
-  addTextSubtitle() {
-    var pos = {x: 50, y: 50, angle: -7, padding: {left: 10, right: 10, top: 10, bottom: 0}, margin: {left: 0, right: 0, top: 0, bottom: 0}};
-    if (this.textString) {
-      const textMeasure = new fabric.IText(this.textString.toUpperCase(), {
-        left: 50,
-        top: 50,
-        fontFamily: 'Titillium Web',
-        angle: -7,
-        fill: '#fff',
-        fontWeight: 'bold',
-        fontSize: 40,
-      });
-
-      var theText, text, textHeight, rectPadding, rectMargin, top = 0, shapes = [];
-      for (var i = 0; i < textMeasure._textLines.length; i = i + 1){
-        theText = textMeasure._textLines[i].join('');
-        textHeight = Math.floor(textMeasure.lineHeight * textMeasure.fontSize)
-
-        text = new fabric.IText(theText, {
+    addTextSubtitle() {
+      var pos = {x: 50, y: 50, angle: -7, padding: 10};
+      if (this.textString) {
+        var fontA = new FontFaceObserver('Titillium Web');
+        fontA.load().then(() => {
+          const text = new fabric.IText(this.textString.toUpperCase(), {
+            top: 50,
+            left: 50,
             fontFamily: 'Titillium Web',
-            left: 0,
-            top: top,
-            fill: "#ffffff",
+            fill: 'red',
             fontWeight: 'bold',
             fontSize: 40,
-            stroke: ""
-        });
+            angle: -7,
+          });
 
-        text.setGradient('fill', {
-          type: 'linear',
-          x1: -text.width / 20,
-          y1: 0,
-          x2: text.width / 1.2,
-          y2: 0,
-          colorStops: {
-              0: '#F21F31',
-              1: '#FF007A'
-          }
-        });
+          var textHeight, rectPadding, top = 50, shapes = [];
+            textHeight = Math.floor(text.lineHeight * text.fontSize);
 
-        rectPadding =   new fabric.Rect({
-            width: text.width + (pos.padding.left + pos.padding.right), 
-            height: textHeight + (pos.padding.top + pos.padding.bottom),
-            left: -1 *  pos.padding.left, 
-            top: top - pos.padding.top,
-            fill: '#fff'
-        })
+            var rectWidth = text.width + 3 * pos.padding;
+            var offset = rectWidth * Math.tan(7 * Math.PI / 180);
+            var left = text.left- pos.padding;
+            var top = text.top - pos.padding;
+            var height =  textHeight + 2 * pos.padding;
+            var rect = new fabric.Polygon([
+              { x: left, y: top }, 
+              { x: left + rectWidth, y: top - offset}, 
+              { x: left + rectWidth, y: top + height - offset},
+              { x: left, y: top + height}], {
+                fill: '#fff',
+              });
 
-        shapes.push(rectPadding);
-        shapes.push(text);
+            text.setGradient('fill', {
+              type: 'linear',
+              x1: -rect.width / 20,
+              y1: 0,
+              x2: rect.width / 1.2,
+              y2: 0,
+              colorStops: {
+                  0: '#F21F31',
+                  1: '#FF007A'
+              }
+            });
 
-        var gap = 0; 
-        top = top - 1 + textHeight + pos.padding.top + pos.margin.top + pos.padding.bottom + pos.margin.bottom;
+            shapes.push(rect);
+            shapes.push(text);
+
+            var group = new fabric.Group(shapes, {lockRotation: true,});
+
+        this.extend(group, this.randomId());
+        this.canvas.add(group);
+        //this.selectItemAfterAdded(group);
+        this.textString = '';
+          });
       }
-
-      var group = new fabric.Group(shapes, {
-        left: pos.x - (pos.padding.left - pos.margin.left),
-        top: pos.y - (pos.padding.top - pos.margin.top),
-        angle: pos.angle,
-      });
-
-      this.extend(group, this.randomId());
-      this.canvas.add(group);
-      //this.selectItemAfterAdded(group);
-      this.textString = '';
-    }
   }
 
   setSelectedText() {
