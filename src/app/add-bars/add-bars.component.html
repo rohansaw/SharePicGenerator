@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="card-header">Grüner Balken</div>
+    <div class="card-body">
+        <div class="custom-item">
+            <div class="custom-item-title">Balken unten</div>
+            <div class="custom-item-body">
+                <input type="number" class="form-control" placeholder="Höhe in %" [(ngModel)]="canvas.bottomBarHeight" (keyup)="setBottomBar()">
+            </div>
+        </div>
+        <div class="custom-item mt-3">
+            <div class="custom-item-title">Balken oben</div>
+            <div class="custom-item-body">
+                <input type="number" class="form-control" placeholder="Höhe in %" [(ngModel)]="canvas.topBarHeight" (keyup)="setTopBar()">
+            </div>
+        </div>
+    </div>
+</div>

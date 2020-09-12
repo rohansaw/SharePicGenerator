@@ -1,0 +1,23 @@
+<div class="card">
+    <div class="card-header">Optionen</div>
+    <div class="card-body text-center">
+        <div class="btn-group" role="group" aria-label="...">
+            <button data-toggle="tooltip" data-placement="bottom" title="Delete element" type="button" class="btn btn-outline-danger" [disabled]="!canvas.selected"
+                (click)="removeSelected();">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+            <button data-toggle="tooltip" data-placement="bottom" title="Send to back" type="button" class="btn btn-outline-primary" [disabled]="!canvas.selected"
+                (click)="sendToBack();">
+                <i class="fa fa-level-down" aria-hidden="true"></i>
+            </button>
+            <button data-toggle="tooltip" data-placement="bottom" title="Send to front" type="button" class="btn btn-outline-primary" [disabled]="!canvas.selected"
+                (click)="bringToFront();">
+                <i class="fa fa-level-up" aria-hidden="true"></i>
+            </button>
+            <button data-toggle="tooltip" data-placement="bottom" title="Unselect" type="button" class="btn btn-outline-primary" [disabled]="!canvas.selected"
+                (click)="cleanSelect()">
+                <i class="fa fa-remove" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="card mt-3">
+    <div class="card-header">Format</div>
+    <div class="card-body overflow-hidden">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control" [(ngModel)]="canvas.size.width" (keyup)="changeSize()">
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        Breite
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="canvas.size.height" (keyup)="changeSize()">
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        Höhe
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="custom-item">
+            <div class="custom-item-title">Hintergrundbild hochladen</div>
+            <div class="custom-item-body">
+                <input type="file" (change)="readBGUrl($event);" >
+            </div>
+        </div>
+        <div class="custom-item mt-3">
+            <div class="custom-item-title">Hintergrund Größe</div>
+            <div class="custom-item-body">
+                <input type="range" class="form-control-range" id="formControlRange" [(ngModel)]="canvas.bgImageScale" (change)="scaleBGImage()">
+            </div>
+        </div>
+    </div>
+</div>

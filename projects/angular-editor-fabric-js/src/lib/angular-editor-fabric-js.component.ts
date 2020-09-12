@@ -60,7 +60,7 @@ export class FabricjsEditorComponent implements AfterViewInit {
     this.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
       hoverCursor: 'pointer',
       selection: true,
-      selectionBorderColor: 'blue'
+      selectionBorderColor: 'blue',
     });
 
 
@@ -339,11 +339,33 @@ export class FabricjsEditorComponent implements AfterViewInit {
   // Block "Upload Image"
 
   addImageOnCanvas(event: any) {
-    if (event.target.src) {
-      fabric.Image.fromURL(event.target.src, (image) => {
+    var url = event.target.src;
+    console.log(url)
+    if (url) {
+      fabric.Image.fromURL(url, (image) => {
         image.set({
-          left: 10,
-          top: 10,
+          left: 50,
+          top: 50,
+          angle: 0,
+          padding: 10,
+          cornerSize: 10,
+          hasRotatingPoint: true,
+          centeredScaling: true,
+        });
+        image.scaleToWidth(this.canvas.getWidth() / 1.3)
+        this.extend(image, this.randomId());
+        this.canvas.add(image);
+        //this.selectItemAfterAdded(image);
+      });
+    }
+  }
+
+  addImageOnCanvasFromUrl(url) {
+    if (url) {
+      fabric.Image.fromURL(url, (image) => {
+        image.set({
+          left: 50,
+          top: 50,
           angle: 0,
           padding: 10,
           cornerSize: 10,
@@ -365,8 +387,8 @@ export class FabricjsEditorComponent implements AfterViewInit {
       }
       fabric.Image.fromURL(url, (image) => {
         image.set({
-          left: 10,
-          top: 10,
+          left: 0,
+          top: 0,
           angle: 0,
           padding: 10,
           cornerSize: 10,
@@ -822,6 +844,7 @@ export class FabricjsEditorComponent implements AfterViewInit {
   }
 
   rasterize() {
+    console.log("test");
     const image = new Image();
     const factor =  this.size.width / this.canvas.getWidth();
     image.src = this.canvas.toDataURL({format: 'png', multiplier: factor});

@@ -1,0 +1,13 @@
+<div class="card mt-3">
+	<div class="card-header">Eigene Bilder hochladen</div>
+    <div class="card-body text-center">
+        <img id="testImage" *ngIf="canvas.url" class="images-item-upload" [src]="canvas.url" (click)="addImageOnCanvasFromUrl(canvas.url);">
+        <input type="file" (change)="readUrl($event);">
+        <div class="btn-group btn-group-justified mt-5" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeWhite(canvas.url);">
+                    <i class="fa fa-times" aria-hidden="true"></i> Löschen</button>
+            </div>
+        </div>
+    </div>
+</div>
