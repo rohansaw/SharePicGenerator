@@ -5,7 +5,6 @@
   "dependencies": {
     "@types/fabric": "^3.6.2",
     "fabric": "^3.6.3",
-    "fabric-history": "^1.6.0",
     "fontfaceobserver": "^2.1.0",
     "ngx-color-picker": "^9.1.0"
   },
