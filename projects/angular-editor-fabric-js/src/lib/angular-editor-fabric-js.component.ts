@@ -51,6 +51,10 @@ export class FabricjsEditorComponent implements AfterViewInit {
   public figureEditor = false;
   public selected: any;
 
+  shouldSave = true
+  undoStack = []
+  redoStack = []
+
   constructor() { }
 
   ngAfterViewInit(): void {
@@ -65,6 +69,21 @@ export class FabricjsEditorComponent implements AfterViewInit {
       'object:moved': (e) => { 
         if (e.target == this.bgImage) {
           this.cleanSelect();
+        }
+      },
+      'object:modified': (e) => {
+        if(this.shouldSave){
+          this.undoStack.push(JSON.stringify(this.canvas));
+        }
+      },
+      'object:removed': (e) => {
+        if(this.shouldSave){
+          this.undoStack.push(JSON.stringify(this.canvas));
+        }
+      },
+      'object:added': (e) => {
+        if(this.shouldSave){
+          this.undoStack.push(JSON.stringify(this.canvas));
         }
       },
       'mouse:up': (e) => {
@@ -149,19 +168,20 @@ export class FabricjsEditorComponent implements AfterViewInit {
       DOWN: 3
     };
 
-    fabric.util.addListener(document.body, 'keydown', (options) => {
-      if (options.repeat) {
-        return;
-      }
-      var key = options.which || options.keyCode; // key detection
-      if (key === 37) { // handle Left key
+    fabric.util.addListener(document.body, 'keydown', (event) => {
+      if (event.keyCode === 37) { // handle Left key
         this.moveSelected(Direction.LEFT);
-      } else if (key === 38) { // handle Up key
+      } else if (event.keyCode === 38) { // handle Up key
         this.moveSelected(Direction.UP);
-      } else if (key === 39) { // handle Right key
+      } else if (event.keyCode === 39) { // handle Right key
         this.moveSelected(Direction.RIGHT);
-      } else if (key === 40) { // handle Down key
+      } else if (event.keyCode === 40) { // handle Down key
         this.moveSelected(Direction.DOWN);
+      } else if (event.ctrlKey && event.keyCode == 90) {
+        this.undo();
+      }
+      else if (event.ctrlKey && event.keyCode == 89) {
+        this.redo();
       }
     });
 
@@ -186,7 +206,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
     const STEP = 1;
     var activeObject = this.canvas.getActiveObject();
     console.log(activeObject)
-  
     if (activeObject) {
       switch (direction) {
         case Direction.LEFT:
@@ -886,6 +905,30 @@ export class FabricjsEditorComponent implements AfterViewInit {
     this.textEditor = false;
     this.imageEditor = false;
     this.figureEditor = false;
+  }
+
+  undo() {
+    this.shouldSave = false;
+    this.redoStack.push(this.undoStack.pop());
+    let previous_state = this.undoStack[this.undoStack.length-1];
+    if (previous_state != null) {
+      this.canvas.loadFromJSON(previous_state, () => {
+        this.canvas.renderAll();
+      })
+    }
+    this.shouldSave=true;
+  }
+
+  redo() {
+    this.shouldSave = false;
+    let previous_state = this.redoStack.pop()
+    if (previous_state != null) {
+      this.undoStack.push(previous_state);
+      this.canvas.loadFromJSON(previous_state, () => {
+          this.canvas.renderAll();
+      });
+    }
+    this.shouldSave=true;
   }
 
 }
