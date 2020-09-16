@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { fabric } from 'fabric';
-import { R3TargetBinder } from '@angular/compiler';
 import FontFaceObserver from 'fontfaceobserver'
 
 @Component({
@@ -56,16 +55,13 @@ export class FabricjsEditorComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
 
-    // setup front side canvas
     this.canvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
       hoverCursor: 'pointer',
       selection: true,
       selectionBorderColor: 'blue',
     });
 
-
     this.canvas.on({
-      'object:moving': (e) => { },
       'object:moved': (e) => { 
         if (e.target == this.bgImage) {
           this.cleanSelect();
@@ -73,16 +69,13 @@ export class FabricjsEditorComponent implements AfterViewInit {
       },
       'mouse:up': (e) => {
         if(e.target == this.bgImage) {
-          console.log('ok')
           this.selected = null;
           this.canvas.discardActiveObject();
           this.canvas.renderAll();
           return;
         }
       },
-      'object:modified': (e) => { },
       'object:selected': (e: any) => {
-
         const selectedObject = e.target;
         this.selected = selectedObject;
         selectedObject.hasRotatingPoint = true;
@@ -92,17 +85,10 @@ export class FabricjsEditorComponent implements AfterViewInit {
         this.resetPanels();
 
         if (selectedObject.type !== 'group' && selectedObject) {
-
           this.getId();
           this.getOpacity();
 
           switch (selectedObject.type) {
-            case 'rect':
-            case 'circle':
-            case 'triangle':
-              this.figureEditor = true;
-              this.getFill();
-              break;
             case 'i-text':
               this.textEditor = true;
               this.getLineHeight();
@@ -156,12 +142,75 @@ export class FabricjsEditorComponent implements AfterViewInit {
       const canvasElement: any = document.getElementById('canvas');
     });
 
+    const Direction = {
+      LEFT: 0,
+      UP: 1,
+      RIGHT: 2,
+      DOWN: 3
+    };
+
+    fabric.util.addListener(document.body, 'keydown', (options) => {
+      if (options.repeat) {
+        return;
+      }
+      var key = options.which || options.keyCode; // key detection
+      if (key === 37) { // handle Left key
+        this.moveSelected(Direction.LEFT);
+      } else if (key === 38) { // handle Up key
+        this.moveSelected(Direction.UP);
+      } else if (key === 39) { // handle Right key
+        this.moveSelected(Direction.RIGHT);
+      } else if (key === 40) { // handle Down key
+        this.moveSelected(Direction.DOWN);
+      }
+    });
+
+    window.addEventListener("keydown", (e) => {
+      // space and arrow keys
+      if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        if(this.canvas.getActiveObject()){
+          e.preventDefault();
+        }   
+      }
+    }, false);
   }
 
+  public moveSelected(direction) {
+    const Direction = {
+      LEFT: 0,
+      UP: 1,
+      RIGHT: 2,
+      DOWN: 3
+    };
+  
+    const STEP = 1;
+    var activeObject = this.canvas.getActiveObject();
+    console.log(activeObject)
+  
+    if (activeObject) {
+      switch (direction) {
+        case Direction.LEFT:
+          activeObject.left -= STEP;
+          break;
+        case Direction.UP:
+          activeObject.top -= STEP;
+          break;
+        case Direction.RIGHT:
+          activeObject.left += STEP;
+          break;
+        case Direction.DOWN:
+          activeObject.top += STEP;
+          break;
+      }
+
+      activeObject.setCoords();
+      this.canvas.renderAll();
+      console.log('selected objects was moved');
+    }
+  
+  }
 
   /*------------------------Block elements------------------------*/
-
-  // Block "Size"
 
   changeSize() {
     var canvasWrapperWidth = document.getElementById('canvasWrapper').offsetWidth;
@@ -169,8 +218,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
     this.canvas.setDimensions({ width: this.size.width * scaleRatio, height: this.size.height * scaleRatio });
     this.setBottomBar();
   }
-
-  // Block "Add text"
 
   addText() {
     if (this.textString) {
@@ -206,7 +253,7 @@ export class FabricjsEditorComponent implements AfterViewInit {
           left: 50,
           fontFamily: 'Titillium Web',
           fill: '#fff',
-          fontWeight: 'bold',
+          fontWeight: '700',
           fontSize: 50,
           angle: pos.angle
         });
@@ -262,7 +309,7 @@ export class FabricjsEditorComponent implements AfterViewInit {
             left: 50,
             fontFamily: 'Titillium Web',
             fill: 'red',
-            fontWeight: 'bold',
+            fontWeight: '900',
             fontSize: 40,
             angle: -7,
           });
@@ -308,10 +355,20 @@ export class FabricjsEditorComponent implements AfterViewInit {
       }
   }
 
+  loadAndUse(font) {
+    var myfont = new FontFaceObserver(font)
+    myfont.load()
+      .then(function() {
+        this.canvas.getActiveObject().set("fontFamily", font);
+        this.canvas.requestRenderAll();
+      }).catch(function(e) {
+        console.log(e)
+        alert('font loading failed ' + font);
+      });
+  }
+
   setSelectedText() {
     if (this.canvas.getActiveObject().type == 'i-text') {
-      //this.canvas.getActiveObject()['text'];
-      
       this.canvas.renderAll()
     }
   }
@@ -438,39 +495,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
       this.canvas.renderAll();
     }
     
-  }
-
-  // Block "Add figure"
-
-  addFigure(figure) {
-    let add: any;
-    switch (figure) {
-      case 'rectangle':
-        add = new fabric.Rect({
-          width: 200, height: 100, left: 10, top: 10, angle: 0,
-          fill: '#3f51b5'
-        });
-        break;
-      case 'square':
-        add = new fabric.Rect({
-          width: 100, height: 100, left: 10, top: 10, angle: 0,
-          fill: '#4caf50'
-        });
-        break;
-      case 'triangle':
-        add = new fabric.Triangle({
-          width: 100, height: 100, left: 10, top: 10, fill: '#2196f3'
-        });
-        break;
-      case 'circle':
-        add = new fabric.Circle({
-          radius: 50, left: 10, top: 10, fill: '#ff5722'
-        });
-        break;
-    }
-    this.extend(add, this.randomId());
-    this.canvas.add(add);
-    this.selectItemAfterAdded(add);
   }
 
   /*Canvas*/
@@ -600,37 +624,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
     if (!object) { return; }
     object.set(name, value).setCoords();
     this.canvas.renderAll();
-  }
-
-  clone() {
-    const activeObject = this.canvas.getActiveObject();
-    const activeGroup = this.canvas.getActiveObjects();
-
-    if (activeObject) {
-      let clone;
-      switch (activeObject.type) {
-        case 'rect':
-          clone = new fabric.Rect(activeObject.toObject());
-          break;
-        case 'circle':
-          clone = new fabric.Circle(activeObject.toObject());
-          break;
-        case 'triangle':
-          clone = new fabric.Triangle(activeObject.toObject());
-          break;
-        case 'i-text':
-          clone = new fabric.IText('', activeObject.toObject());
-          break;
-        case 'image':
-          clone = fabric.util.object.clone(activeObject);
-          break;
-      }
-      if (clone) {
-        clone.set({ left: 10, top: 10 });
-        this.canvas.add(clone);
-        this.selectItemAfterAdded(clone);
-      }
-    }
   }
 
   getId() {
@@ -788,7 +781,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
   }
 
   /*System*/
-
 
   removeSelected() {
     const activeObject = this.canvas.getActiveObject();
