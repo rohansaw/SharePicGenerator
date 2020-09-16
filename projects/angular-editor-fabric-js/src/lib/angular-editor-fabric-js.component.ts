@@ -51,10 +51,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
   public figureEditor = false;
   public selected: any;
 
-  shouldSave = true
-  undoStack = []
-  redoStack = []
-
   constructor() { }
 
   ngAfterViewInit(): void {
@@ -69,21 +65,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
       'object:moved': (e) => { 
         if (e.target == this.bgImage) {
           this.cleanSelect();
-        }
-      },
-      'object:modified': (e) => {
-        if(this.shouldSave){
-          this.undoStack.push(JSON.stringify(this.canvas));
-        }
-      },
-      'object:removed': (e) => {
-        if(this.shouldSave){
-          this.undoStack.push(JSON.stringify(this.canvas));
-        }
-      },
-      'object:added': (e) => {
-        if(this.shouldSave){
-          this.undoStack.push(JSON.stringify(this.canvas));
         }
       },
       'mouse:up': (e) => {
@@ -177,11 +158,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
         this.moveSelected(Direction.RIGHT);
       } else if (event.keyCode === 40) { // handle Down key
         this.moveSelected(Direction.DOWN);
-      } else if (event.ctrlKey && event.keyCode == 90) {
-        this.undo();
-      }
-      else if (event.ctrlKey && event.keyCode == 89) {
-        this.redo();
       }
     });
 
@@ -905,30 +881,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
     this.textEditor = false;
     this.imageEditor = false;
     this.figureEditor = false;
-  }
-
-  undo() {
-    this.shouldSave = false;
-    this.redoStack.push(this.undoStack.pop());
-    let previous_state = this.undoStack[this.undoStack.length-1];
-    if (previous_state != null) {
-      this.canvas.loadFromJSON(previous_state, () => {
-        this.canvas.renderAll();
-      })
-    }
-    this.shouldSave=true;
-  }
-
-  redo() {
-    this.shouldSave = false;
-    let previous_state = this.redoStack.pop()
-    if (previous_state != null) {
-      this.undoStack.push(previous_state);
-      this.canvas.loadFromJSON(previous_state, () => {
-          this.canvas.renderAll();
-      });
-    }
-    this.shouldSave=true;
   }
 
 }

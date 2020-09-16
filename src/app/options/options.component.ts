@@ -26,12 +26,4 @@ export class OptionsComponent{
     this.canvas.cleanSelect();
   }
 
-  public undo() {
-    this.canvas.undo();
-  }
-
-  public redo() {
-    this.canvas.redo();
-  }
-
 }
