@@ -8,6 +8,7 @@
 
 # dependencies
 /node_modules
+/projects/angular-editor-fabric-js/node_modules
 
 # IDEs and editors
 /.idea
