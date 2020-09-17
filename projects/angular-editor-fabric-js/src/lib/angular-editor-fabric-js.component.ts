@@ -239,24 +239,25 @@ export class FabricjsEditorComponent implements AfterViewInit {
   }
 
   addTextTitle() {
-    var pos = {x: 50, y: 50, angle: -7, padding: 10};
     if (this.textString) {
-      var fontA = new FontFaceObserver('Titillium Web');
-      fontA.load().then(() => {
-        const text = new fabric.IText(this.textString.toUpperCase(), {
-          top: 50,
-          left: 50,
-          fontFamily: 'Titillium Web',
-          fill: '#fff',
-          fontWeight: '700',
-          fontSize: 50,
-          angle: pos.angle
-        });
-        this.canvas.add(text)
-        console.log(text)
+      let shapes = [];
+      const textInput = new fabric.IText(this.textString.toUpperCase())
+      let pos = {top: 50, left: 50, angle: -7, padding: 10};
 
-          var textHeight, rectPadding,  shapes = [];
-          textHeight = Math.floor(text.lineHeight * text.fontSize);
+      const fontA = new FontFaceObserver('Titillium Web');
+      fontA.load().then(() => {
+        for(let line in textInput.textLines) {
+          let text = new fabric.IText(textInput.textLines[line].toUpperCase(), {
+            top: pos.top,
+            left: pos.left,
+            fontFamily: 'Titillium Web',
+            fill: '#fff',
+            fontWeight: '700',
+            fontSize: 50,
+            angle: pos.angle
+          });
+
+          const textHeight = Math.floor(text.lineHeight * text.fontSize);
           
           var rectWidth = text.width + 3 * pos.padding;
           var offset = rectWidth * Math.tan(7 * Math.PI / 180);
@@ -268,8 +269,8 @@ export class FabricjsEditorComponent implements AfterViewInit {
             { x: left + rectWidth, y: top - offset}, 
             { x: left + rectWidth, y: top + height - offset},
             { x: left, y: top + height}], {
-              fill: 'red',
-            });
+              fill: '#F21F31',
+          });
 
           rect.setGradient('fill', {
             type: 'linear',
@@ -285,33 +286,39 @@ export class FabricjsEditorComponent implements AfterViewInit {
 
           shapes.push(rect);
           shapes.push(text);
+          pos.top = pos.top + textHeight + 2;
+      }
 
-        let group = new fabric.Group(shapes, {lockRotation: true,});
-        this.extend(group, this.randomId());
-        this.canvas.add(group);
-        this.textString = '';
-        });
+      console.log(shapes)
+      let group = new fabric.Group(shapes, {lockRotation: true,});
+      this.extend(group, this.randomId());
+      this.canvas.add(group);
+      this.textString = '';
+      });
       }
     }
 
     addTextSubtitle() {
-      var pos = {x: 50, y: 50, angle: -7, padding: 10};
       if (this.textString) {
-        var fontA = new FontFaceObserver('Titillium Web');
+        let shapes = [];
+        const textInput = new fabric.IText(this.textString.toUpperCase())
+        let pos = {top: 50, left: 50, angle: -7, padding: 10};
+  
+        const fontA = new FontFaceObserver('Titillium Web');
         fontA.load().then(() => {
-          const text = new fabric.IText(this.textString.toUpperCase(), {
-            top: 50,
-            left: 50,
-            fontFamily: 'Titillium Web',
-            fill: 'red',
-            fontWeight: '900',
-            fontSize: 40,
-            angle: -7,
-          });
-
-          var textHeight, rectPadding, top = 50, shapes = [];
-            textHeight = Math.floor(text.lineHeight * text.fontSize);
-
+          for(let line in textInput.textLines) {
+            let text = new fabric.IText(textInput.textLines[line].toUpperCase(), {
+              top: pos.top,
+              left: pos.left,
+              fontFamily: 'Titillium Web',
+              fill: '#F21F31',
+              fontWeight: '700',
+              fontSize: 40,
+              angle: pos.angle
+            });
+  
+            const textHeight = Math.floor(text.lineHeight * text.fontSize);
+            
             var rectWidth = text.width + 3 * pos.padding;
             var offset = rectWidth * Math.tan(7 * Math.PI / 180);
             var left = text.left- pos.padding;
@@ -322,9 +329,9 @@ export class FabricjsEditorComponent implements AfterViewInit {
               { x: left + rectWidth, y: top - offset}, 
               { x: left + rectWidth, y: top + height - offset},
               { x: left, y: top + height}], {
-                fill: '#fff',
-              });
-
+                fill: '#FFF',
+            });
+  
             text.setGradient('fill', {
               type: 'linear',
               x1: -rect.width / 20,
@@ -336,18 +343,19 @@ export class FabricjsEditorComponent implements AfterViewInit {
                   1: '#FF007A'
               }
             });
-
+  
             shapes.push(rect);
             shapes.push(text);
-
-            var group = new fabric.Group(shapes, {lockRotation: true,});
-
+            pos.top = pos.top + textHeight + 2;
+        }
+  
+        console.log(shapes)
+        let group = new fabric.Group(shapes, {lockRotation: true,});
         this.extend(group, this.randomId());
         this.canvas.add(group);
-        //this.selectItemAfterAdded(group);
         this.textString = '';
-          });
-      }
+        });
+        }
   }
 
   loadAndUse(font) {
