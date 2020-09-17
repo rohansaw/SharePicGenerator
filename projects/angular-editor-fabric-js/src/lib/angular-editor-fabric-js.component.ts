@@ -38,7 +38,7 @@ export class FabricjsEditorComponent implements AfterViewInit {
   public url: string | ArrayBuffer = '';
   public bgImage: fabric.Image;
   public bgImageUrl: string | ArrayBuffer = '';
-  public bgImageScale: number;
+  public bgImageScale = 50;
   public size: any = {
     width: 1080,
     height: 1080
@@ -486,7 +486,7 @@ export class FabricjsEditorComponent implements AfterViewInit {
 
   scaleBGImage() {
     if(this.bgImage){
-      this.bgImage.scaleToWidth(this.bgImage.getOriginalSize().width * 2 * this.bgImageScale/100);
+      this.bgImage.scaleToWidth(this.size.width * this.bgImageScale/100 * 2);
       this.canvas.renderAll();
     }
     
