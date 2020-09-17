@@ -1,31 +1,18 @@
 <div class="card mt-3">
     <div class="card-header">Neues Textfeld</div>
     <div class="card-body">
-        <input type="text" class="form-control mt-3" [(ngModel)]="canvas.textString">
-        <div class="custom-item mt-3">
-            <div class="custom-item-title">Überschrift</div>
-            <div class="custom-item-body">
-                <p>Text zeilenweise eingeben</p>
-                <button id="add-text" data-toggle="tooltip" data-placement="bottom" title="Add text" class="btn btn-primary mt-1" (click)="addTextTitle()">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-            </div>
-        </div>
-        <div class="custom-item mt-3">
-            <div class="custom-item-title">Unterüberschrift</div>
-            <div class="custom-item-body">
-                <button id="add-text" data-toggle="tooltip" data-placement="bottom" title="Add text" class="btn btn-primary" (click)="addTextSubtitle()">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-            </div>
-        </div>
-        <div class="custom-item mt-3">
-            <div class="custom-item-title">Text ohne Formattierung</div>
-            <div class="custom-item-body">
-                <button id="add-text" data-toggle="tooltip" data-placement="bottom" title="Add text" class="btn btn-primary" (click)="addText()">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-            </div>
+        <textarea class="form-control mt-3" type="text" [(ngModel)]="canvas.textString"></textarea>
+        Titel zeilenweise erstellen!
+        <div class="custom-item mt-3 text-center">
+            <button id="add-text" data-toggle="tooltip" data-placement="bottom" title="Add text" class="btn btn-primary" (click)="addTextTitle()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Titel
+            </button><br>
+            <button id="add-text" data-toggle="tooltip" data-placement="bottom" title="Add text" class="btn btn-primary mt-2" (click)="addTextSubtitle()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Subtitel
+            </button><br>
+            <button id="add-text" data-toggle="tooltip" data-placement="bottom" title="Add text" class="btn btn-primary mt-2 mb-2" (click)="addText()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Text
+            </button>
         </div>
     </div>
 </div>

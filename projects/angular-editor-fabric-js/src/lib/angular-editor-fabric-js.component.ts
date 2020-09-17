@@ -158,6 +158,8 @@ export class FabricjsEditorComponent implements AfterViewInit {
         this.moveSelected(Direction.RIGHT);
       } else if (event.keyCode === 40) { // handle Down key
         this.moveSelected(Direction.DOWN);
+      } else if(event.keyCode === 46 || event.keyCode === 8) { // delete
+        this.removeSelected();
       }
     });
 
@@ -230,9 +232,7 @@ export class FabricjsEditorComponent implements AfterViewInit {
       });
 
       this.extend(text, this.randomId());
-      var fontA = new FontFaceObserver('Titillium Web');
-      fontA.load().then(() => {this.canvas.add(text)});
-      this.selectItemAfterAdded(text);
+      this.canvas.add(text);
       this.textString = '';
     });
     }
@@ -252,6 +252,8 @@ export class FabricjsEditorComponent implements AfterViewInit {
           fontSize: 50,
           angle: pos.angle
         });
+        this.canvas.add(text)
+        console.log(text)
 
           var textHeight, rectPadding,  shapes = [];
           textHeight = Math.floor(text.lineHeight * text.fontSize);
@@ -284,11 +286,9 @@ export class FabricjsEditorComponent implements AfterViewInit {
           shapes.push(rect);
           shapes.push(text);
 
-        var group = new fabric.Group(shapes, {lockRotation: true,});
-
+        let group = new fabric.Group(shapes, {lockRotation: true,});
         this.extend(group, this.randomId());
         this.canvas.add(group);
-        //this.selectItemAfterAdded(group);
         this.textString = '';
         });
       }
