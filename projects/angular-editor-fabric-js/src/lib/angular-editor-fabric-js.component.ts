@@ -158,7 +158,7 @@ export class FabricjsEditorComponent implements AfterViewInit {
         this.moveSelected(Direction.RIGHT);
       } else if (event.keyCode === 40) { // handle Down key
         this.moveSelected(Direction.DOWN);
-      } else if(event.keyCode === 46 || event.keyCode === 8) { // delete
+      } else if(event.keyCode === 46) { // delete
         this.removeSelected();
       }
     });
