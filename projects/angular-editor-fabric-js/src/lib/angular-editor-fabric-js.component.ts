@@ -289,7 +289,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
           pos.top = pos.top + textHeight + 2;
       }
 
-      console.log(shapes)
       let group = new fabric.Group(shapes, {lockRotation: true,});
       this.extend(group, this.randomId());
       this.canvas.add(group);
@@ -349,7 +348,6 @@ export class FabricjsEditorComponent implements AfterViewInit {
             pos.top = pos.top + textHeight + 2;
         }
   
-        console.log(shapes)
         let group = new fabric.Group(shapes, {lockRotation: true,});
         this.extend(group, this.randomId());
         this.canvas.add(group);
@@ -464,6 +462,11 @@ export class FabricjsEditorComponent implements AfterViewInit {
         this.bgImage = image;
       });
     }
+  }
+
+  deleteBG() {
+    this.canvas.remove(this.bgImage);
+    this.bgImage = null;
   }
 
   readBGUrl(event){
@@ -806,12 +809,12 @@ export class FabricjsEditorComponent implements AfterViewInit {
     const activeGroup = this.canvas.getActiveObjects();
 
     if (activeObject) {
-      activeObject.bringToFront();
+      activeObject.bringForward();
       activeObject.opacity = 1;
     } else if (activeGroup) {
       this.canvas.discardActiveObject();
       activeGroup.forEach((object) => {
-        object.bringToFront();
+        object.bringForward();
       });
     }
   }
@@ -821,20 +824,20 @@ export class FabricjsEditorComponent implements AfterViewInit {
     const activeGroup = this.canvas.getActiveObjects();
 
     if (activeObject) {
-      this.canvas.sendToBack(activeObject);
-      activeObject.sendToBack();
+      this.canvas.sendBackwards(activeObject);
+      activeObject.sendBackwards();
       activeObject.opacity = 1;
     } else if (activeGroup) {
       this.canvas.discardActiveObject();
       activeGroup.forEach((object) => {
-        object.sendToBack();
+        object.sendBackwards();
       });
     }
   }
 
   confirmClear() {
     if (confirm('Are you sure?')) {
-      this.canvas.clear();
+      window.location.reload();
     }
   }
 

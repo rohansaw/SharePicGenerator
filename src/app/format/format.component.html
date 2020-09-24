@@ -24,7 +24,10 @@
         <div class="custom-item">
             <div class="custom-item-title">Hintergrundbild hochladen</div>
             <div class="custom-item-body">
-                <input type="file" (change)="readBGUrl($event);" >
+                <input id="bg-input" type="file" (change)="readBGUrl($event);" #bginput>
+                <button id="delete-bg" data-toggle="tooltip" data-placement="bottom" title="Add text" class="btn btn-secondary mt-2 mb-2" (click)="deleteBG()">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Hintergrung Löschen
+                </button>
             </div>
         </div>
         <div class="custom-item mt-3">

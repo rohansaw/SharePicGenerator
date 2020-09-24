@@ -22,4 +22,8 @@ export class FormatComponent {
     this.canvas.scaleBGImage();
   }
 
+  public deleteBG() {
+    this.canvas.deleteBG();
+  }
+
 }
